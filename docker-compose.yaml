@@ -1,0 +1,22 @@
+version: "3.6"
+
+services:
+
+  server:
+    container_name: aiohttp3_server
+    build: .
+    ports:
+      - 8080:8080
+
+  database:
+    container_name: aiohttp3_db
+    image: postgres:latest
+    volumes:
+      - aiohttp3_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=aiohttp3
+      - POSTGRES_DB=aiohttp3_db
+      - POSTGRES_PASSWORD=1234
+
+volumes:
+  aiohttp3_data:
