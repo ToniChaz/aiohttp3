@@ -8,9 +8,11 @@ ENV PYTHONFAULTHANDLER=1 \
   PIP_DEFAULT_TIMEOUT=100 \
   POETRY_VERSION=1.0.5
 
-ADD ./server /server
+ADD ./src /app/src
+ADD ./poetry.lock /app
+ADD ./pyproject.toml /app
 
-WORKDIR /server
+WORKDIR /app
 
 RUN pip install "poetry==$POETRY_VERSION"
 

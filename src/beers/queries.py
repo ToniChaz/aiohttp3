@@ -13,17 +13,17 @@ def create_table():
     db.insert(query)
 
 
-def fetch(beer_id=None):
+def fetch(column=None, beer_id=None):
     """ Fetch data from PostgreSQL database"""
-    if beer_id is not None:
-        sql = "SELECT * FROM beers WHERE id=%s" % beer_id
+    if beer_id is not None and column is not None:
+        sql = "SELECT * FROM beers WHERE %s='%s'" % (column, beer_id)
         return db.fetch(sql, True)
     else:
         sql = "SELECT * FROM beers"
         return db.fetch(sql)
 
 
-def insert(values):
+def insert(beer):
     """ Insert data from PostgreSQL database"""
-    sql = "INSERT INTO beers VALUES(%s);"
-    return db.insert(sql, values)
+    sql = "INSERT INTO beers(name, graduation) VALUES('%s', %s)" % (beer["name"], beer["graduation"])
+    return db.insert(sql)

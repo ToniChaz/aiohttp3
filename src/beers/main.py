@@ -1,34 +1,37 @@
 from aiohttp import web
 from . import queries
+from . import model
 
 
 async def get_beer(request):
     beer_id = request.match_info.get("beer_id", None)
 
     if beer_id:
-        beer = queries.fetch(beer_id)
+        beer = queries.fetch("id", beer_id)
         if not beer:
             raise web.HTTPNotFound
         return web.json_response(beer)
 
     beers = queries.fetch()
-    return web.json_response(beers)
+    beers_list = model.to_list(beers)
+    return web.json_response(beers_list)
 
 
 async def add_beer(request):
     beer = await request.json()
+    print(type(beer), beer)
 
-    if not beer or not beer["id"] or not beer["name"] or not beer["graduation"]:
+    if not beer or not "name" in beer or not "graduation" in beer:
         raise web.HTTPBadRequest
 
-    beer_exist = queries.fetch(beer["id"])
+    beer_exist = queries.fetch("name", beer["name"])
     if beer_exist:
         raise web.HTTPConflict
 
     queries.insert(beer)
     beers = queries.fetch()
-
-    return web.json_response(beers)
+    beers_list = model.to_list(beers)
+    return web.json_response(beers_list)
 
 
 # async def remove_beer(request):
